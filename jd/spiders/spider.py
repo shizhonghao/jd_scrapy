@@ -1,7 +1,8 @@
 import scrapy
 import re
 import json
-from spiders.info import parse_info
+from .info import parse_info
+import sys
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -20,12 +21,13 @@ class QuotesSpider(scrapy.Spider):
 
     def parse_seller(self,response):
         print("seller:",response)
-        print(response.body)
+        #print(response.body)
         res = json.loads(response.body.decode("gbk"))
-        print(json.dumps(res, indent=4, ensure_ascii=False))
+        #print(json.dumps(res, indent=4, ensure_ascii=False))
         pass
 
     def parse(self, response):
+        print(sys.path)
         # get item id
         item_id = int(re.findall('\d+',response.url)[0])
         print("item-id:",item_id,type(item_id))
