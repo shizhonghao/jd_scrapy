@@ -2,7 +2,6 @@ import scrapy
 import re
 import json
 from .info import parse_info
-import sys
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -27,7 +26,6 @@ class QuotesSpider(scrapy.Spider):
         pass
 
     def parse(self, response):
-        print(sys.path)
         # get item id
         item_id = int(re.findall('\d+',response.url)[0])
         print("item-id:",item_id,type(item_id))
