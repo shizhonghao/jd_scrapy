@@ -11,4 +11,7 @@ import scrapy
 class JdItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    item_id = scrapy.Field()
+    url1 = scrapy.Field()
+    url2 = scrapy.Field()
     pass
