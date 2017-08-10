@@ -1,7 +1,7 @@
 import scrapy
 import re
 import json
-
+from spiders.info import parse_info
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -29,6 +29,9 @@ class QuotesSpider(scrapy.Spider):
         # get item id
         item_id = int(re.findall('\d+',response.url)[0])
         print("item-id:",item_id,type(item_id))
+
+        # parse item info
+        info = parse_info(response)
 
         # buyer's answer
         page_number = 1
