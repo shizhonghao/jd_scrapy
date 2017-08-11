@@ -20,9 +20,9 @@
 
 ## run scraper
 
-  First cd to your working directory
+* First cd to your working directory
   
-  Then run 
+* Then run 
   
   `scrapy crawl quotes`
   
