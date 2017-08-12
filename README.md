@@ -30,9 +30,9 @@
   
   in command line, you need to install Mongodb before using pymongo
 
-* To install Mongodb on Ubuntu [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/))
+* To install Mongodb on Ubuntu [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
-* To install Mongodb on windows [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
+* To install Mongodb on Windows [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
 
 ## run scraper
 
