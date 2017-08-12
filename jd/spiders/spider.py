@@ -9,15 +9,16 @@ class QuotesSpider(scrapy.Spider):
         'https://item.jd.com/4835534.html'
     ]
 
-    page_num = 1
-
-
     def parse_buyer(self,response):
         print("buyer:",response)
         # question list of buyer-answers
+        print(type(response.body))
         res = json.loads(response.body)
         question_list = []
         answer_list = []
+        page_number = int(re.findall('\d+', response.url)[0])
+        item_id = int(re.findall('\d+', response.url)[1])
+
         if res["questionList"]:
             for question in res["questionList"]:
                 answer_list.clear()
@@ -27,19 +28,19 @@ class QuotesSpider(scrapy.Spider):
                 question_list.append(
                     {
                         "question":question["content"],
-                        "answer":answer_list
+                        "answer":answer_list.copy()
                     }
                 )
             yield {
+                "item_id":item_id,
+                "page_number":page_number,
                 "buyer_qa":question_list
             }
 
-            page_number = int(re.findall('\d+', response.url)[0])
-            item_id = int(re.findall('\d+', response.url)[1])
             page_number = page_number + 1
             question_url = "https://question.jd.com/question/getQuestionAnswerList.action?page=%d&productId=%d" % (
             page_number, item_id)
-            req = scrapy.Request(question_url, callback=self.parse_buyer)
+            yield scrapy.Request(question_url, callback=self.parse_buyer)
         else:
             print("end of buyer_qa parser.")
             pass
@@ -54,6 +55,7 @@ class QuotesSpider(scrapy.Spider):
         #print(response.body)
         res = json.loads(response.body.decode("gbk"))
         #print(json.dumps(res, indent=4, ensure_ascii=False))
+
         pass
 
     def parse(self, response):
