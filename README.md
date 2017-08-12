@@ -17,6 +17,22 @@
   `pip install "*.whl"`
 
   where * is the path & name of the .whl file
+  
+### Database
+
+* Mongodb is used in this project and you can access to it by python using pymongo
+
+  Whose documentation can be found here [link](https://api.mongodb.com/python/current/tutorial.html)
+  
+  To install pymongo, run
+  
+  `pip install pymongo`
+  
+  in command line, you need to install Mongodb before using pymongo
+
+* To install Mongodb on Ubuntu [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/))
+
+* To install Mongodb on windows [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
 
 ## run scraper
 
