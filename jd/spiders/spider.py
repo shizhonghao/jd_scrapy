@@ -4,15 +4,16 @@ import json
 from .info import parse_info
 
 class QuotesSpider(scrapy.Spider):
-    name = "quotes"
+    name = "jd_qa"
     start_urls = [
         'https://item.jd.com/4835534.html'
     ]
 
+    # however this function can only get the front two answers in answerlist
+    # because the rest is not included in the returning json
     def parse_buyer(self,response):
         print("buyer:",response)
         # question list of buyer-answers
-        print(type(response.body))
         res = json.loads(response.body)
         question_list = []
         answer_list = []
@@ -27,6 +28,7 @@ class QuotesSpider(scrapy.Spider):
 
                 question_list.append(
                     {
+                        "question_id": question["id"],
                         "question":question["content"],
                         "answer":answer_list.copy()
                     }
@@ -50,10 +52,31 @@ class QuotesSpider(scrapy.Spider):
         #print(json.dumps(res,indent=4,ensure_ascii=False))
         pass
 
+    # the complete answerlist could be accessed through this function
+    def parse_buyer_makeup(self,response):
+        page_number = int(re.findall('\d+', response.url)[0])
+        question_id = int(re.findall('\d+', response.url)[1])
+        question_list = []
+
+        question_url = "https://question.jd.com/question/getAnswerListById.action?page=1&questionId=3961029"
+        yield {
+            "question_id": question_id,
+            "page_number": page_number,
+            "buyer_makeup": question_list
+        }
+
     def parse_seller(self,response):
         print("seller:",response)
+        page_number = int(re.findall('\d+', response.url)[0])
+        item_id = int(re.findall('\d+', response.url)[1])
+        # process here
+
+        page_number = page_number + 1
+        question_url = "https://club.jd.com/allconsultations/%d-%d-1.html" % (item_id, page_number)
+        yield scrapy.Request(question_url, callback=self.parse_seller)
+
         #print(response.body)
-        res = json.loads(response.body.decode("gbk"))
+        #res = json.loads(response.body.decode("gbk"))
         #print(json.dumps(res, indent=4, ensure_ascii=False))
 
         pass
@@ -76,16 +99,16 @@ class QuotesSpider(scrapy.Spider):
         # seller's answer, start from page_number
         page_number = 1
         # the parser will iterate itself till the end page
-        question_url_s = "https://club.jd.com/clubservice/newconsulation-%d-%d.html" % (item_id,page_number)
+        question_url_s = "https://club.jd.com/allconsultations/%d-%d-1.html" % (item_id,page_number)
         yield scrapy.Request(question_url_s,callback=self.parse_seller)
 
+        """
         yield{
             'item_id':item_id,
             'url1':question_url_b,
             'url2':question_url_s,
         }
 
-        """
         for quote in response.css('div.quote'):
             yield {
                 'text': quote.css('span.text::text').extract_first(),
