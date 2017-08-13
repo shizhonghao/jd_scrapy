@@ -44,6 +44,10 @@
   
 ## Database schema
 
-* Currently we have /JD/buyer_qa in mongodb
+* In mongodb, data is restored in collections(similar to tables in relational database) of databases
+
+* All data is preserved under database JD
+
+* We now have collections buyer_qa & seller_qa
 
 * Database access is defined in `pipelines.py`
