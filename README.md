@@ -34,6 +34,8 @@
 
 * To install Mongodb on Windows [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
 
+* Using mongo plugin in pycharm to visualize database is recommeded
+
 ## Run scraper
 
 * First cd to your working directory
@@ -51,3 +53,5 @@
 * We now have collections buyer_qa & seller_qa
 
 * Database access is defined in `pipelines.py`
+
+
