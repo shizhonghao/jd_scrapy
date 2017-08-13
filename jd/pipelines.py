@@ -14,8 +14,7 @@ class JdPipeline(object):
 
         # should be updating a document
         if "buyer_qa" in item:
-            db = self.client["JD"]
-            collection = db["buyer_qa"]
+            collection = self.db["buyer_qa"]
             collection.insert_one(item)
             """
             print("buyer_qa pipe here")
@@ -29,6 +28,8 @@ class JdPipeline(object):
             pass
 
         elif "seller_qa" in item:
+            collection = self.db["seller_qa"]
+            collection.insert_one(item)
             pass
 
         elif "" in item:
@@ -37,6 +38,7 @@ class JdPipeline(object):
 
     def open_spider(self, spider):
         self.client = pymongo.MongoClient('localhost', 27017)
+        self.db = self.client["JD"]
 
     def close_spider(self, spider):
         self.client.close()

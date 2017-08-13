@@ -67,13 +67,36 @@ class QuotesSpider(scrapy.Spider):
 
     def parse_seller(self,response):
         print("seller:",response)
-        page_number = int(re.findall('\d+', response.url)[0])
-        item_id = int(re.findall('\d+', response.url)[1])
+        item_id = int(re.findall('\d+', response.url)[0])
+        page_number = int(re.findall('\d+', response.url)[1])
         # process here
+        question_list = []
+        q = response.xpath(
+            '''
+            /html/body//div[@class="w"]//div[@class="right"]
+            //div[@class="Refer_List"]//div//dl[@class="ask"]/dd/a/text()
+            ''').extract()
+        a = response.xpath(
+            '''
+            /html/body//div[@class="w"]//div[@class="right"]
+            //div[@class="Refer_List"]//div//dl[@class="answer"]/dd/text()
+            ''').extract()
+        for question in q:
+            question_list.append({"question":question.strip()})
+        for index,answer in enumerate(a):
+            question_list[index]["answer"] = answer.strip()
 
-        page_number = page_number + 1
-        question_url = "https://club.jd.com/allconsultations/%d-%d-1.html" % (item_id, page_number)
-        yield scrapy.Request(question_url, callback=self.parse_seller)
+        if question_list:
+            yield {
+                "item_id": item_id,
+                "page_number": page_number,
+                "seller_qa": question_list
+            }
+            page_number = page_number + 1
+            question_url = "https://club.jd.com/allconsultations/%d-%d-1.html" % (item_id, page_number)
+            yield scrapy.Request(question_url, callback=self.parse_seller)
+        else:
+            print("end of seller_qa parser.")
 
         #print(response.body)
         #res = json.loads(response.body.decode("gbk"))
@@ -95,7 +118,7 @@ class QuotesSpider(scrapy.Spider):
         question_url_b = "https://question.jd.com/question/getQuestionAnswerList.action?page=%d&productId=%d" % (page_number,item_id)
         req = scrapy.Request(question_url_b,callback=self.parse_buyer)
         yield req
-
+        
         # seller's answer, start from page_number
         page_number = 1
         # the parser will iterate itself till the end page
