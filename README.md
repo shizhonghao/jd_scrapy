@@ -2,7 +2,7 @@
 
 * A scraper based on scrapy using python3 to get Q&A from jd.com
 
-## setup
+## Setup
 
 * To run this project, you need to install python & scrapy on your computer
 
@@ -18,7 +18,7 @@
 
   where * is the path & name of the .whl file
   
-### Database
+### Database setup
 
 * Mongodb is used in this project and you can access to it by python using pymongo
 
@@ -34,12 +34,16 @@
 
 * To install Mongodb on Windows [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
 
-## run scraper
+## Run scraper
 
 * First cd to your working directory
   
 * Then run 
   
-  `scrapy crawl quotes`
+  `scrapy crawl jd_qa`
   
-  "quotes" might be changed to another scraper name
+## Database schema
+
+* Currently we have /JD/buyer_qa in mongodb
+
+* Database access is defined in `pipelines.py`
