@@ -6,8 +6,8 @@ from .info import parse_info
 class QuotesSpider(scrapy.Spider):
     name = "jd_qa"
     start_urls = [
-        'https://item.jd.com/4835534.html',
-        'https://item.jd.com/2967929.html'
+        #'https://item.jd.com/2967929.html',
+        'https://item.jd.com/4835534.html'
     ]
 
     # however this function can only get the front two answers in answerlist
@@ -15,7 +15,7 @@ class QuotesSpider(scrapy.Spider):
     def parse_buyer(self,response):
         print("buyer:",response)
         # question list of buyer-answers
-        res = json.loads(response.body)
+        res = json.loads(response.body_as_unicode())
         question_list = []
         answer_list = []
         page_number = int(re.findall('\d+', response.url)[0])
