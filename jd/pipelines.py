@@ -32,7 +32,9 @@ class JdPipeline(object):
             collection.insert_one(item)
             pass
 
-        elif "" in item:
+        elif "item_info" in item:
+            collection = self.db["item_info"]
+            collection.insert_one(item)
             pass
         return item
 

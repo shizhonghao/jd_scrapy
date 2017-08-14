@@ -124,6 +124,10 @@ class QuotesSpider(scrapy.Spider):
 
         # parse item info
         info = parse_info(response)
+        yield {
+            'item_id':item_id,
+            'item_info':info
+        }
 
         # buyer's answer, start from page_number
         page_number = 1
