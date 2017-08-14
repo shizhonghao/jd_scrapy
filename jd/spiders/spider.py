@@ -6,7 +6,8 @@ from .info import parse_info
 class QuotesSpider(scrapy.Spider):
     name = "jd_qa"
     start_urls = [
-        'https://item.jd.com/4835534.html'
+        'https://item.jd.com/4835534.html',
+        'https://item.jd.com/2967929.html'
     ]
 
     # however this function can only get the front two answers in answerlist
@@ -56,14 +57,26 @@ class QuotesSpider(scrapy.Spider):
     def parse_buyer_makeup(self,response):
         page_number = int(re.findall('\d+', response.url)[0])
         question_id = int(re.findall('\d+', response.url)[1])
-        question_list = []
+        answer_list = []
+        res = json.loads(response.body)
 
-        question_url = "https://question.jd.com/question/getAnswerListById.action?page=1&questionId=3961029"
-        yield {
-            "question_id": question_id,
-            "page_number": page_number,
-            "buyer_makeup": question_list
-        }
+        if res["answers"]:
+            item_id = res["answers"][0]["productId"]
+            for answer in res["answers"]:
+                answer_list.append(answer["content"])
+            page_number = page_number + 1
+            question_url = "https://question.jd.com/question/getAnswerListById." \
+                           "action?page=%d&questionId=%d" %(page_number,question_id)
+            yield scrapy.Request(question_url,callback=self.parse_buyer_makeup)
+            yield {
+                "item_id":item_id,
+                "question_id": question_id,
+                "page_number": page_number,
+                "buyer_makeup": answer_list
+            }
+        else:
+            print("end of buyer_qa makeup parser.")
+            pass
 
     def parse_seller(self,response):
         print("seller:",response)
@@ -118,7 +131,7 @@ class QuotesSpider(scrapy.Spider):
         question_url_b = "https://question.jd.com/question/getQuestionAnswerList.action?page=%d&productId=%d" % (page_number,item_id)
         req = scrapy.Request(question_url_b,callback=self.parse_buyer)
         yield req
-        
+
         # seller's answer, start from page_number
         page_number = 1
         # the parser will iterate itself till the end page
