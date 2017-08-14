@@ -50,7 +50,7 @@
 
 * All data is preserved under database JD
 
-* We now have collections buyer_qa & seller_qa
+* We now have collections buyer_qa & seller_qa & item_info
 
 * Database access is defined in `pipelines.py`
 
