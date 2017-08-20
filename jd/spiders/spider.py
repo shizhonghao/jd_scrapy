@@ -29,16 +29,22 @@ class QuotesSpider(scrapy.Spider):
 
                 question_list.append(
                     {
-                        "question_id": question["id"],
-                        "question":question["content"],
-                        "answer":answer_list.copy()
+                        "question_id": str(question["id"]),
+                        "question": question["content"],
+                        "answer": answer_list.copy()
                     }
                 )
+
+                question_url = "https://question.jd.com/question/getAnswerListById." \
+                               "action?page=%d&questionId=%d" % (1, question["id"])
+                yield scrapy.Request(question_url, callback=self.parse_buyer_makeup)
+
             yield {
                 "item_id":item_id,
-                "page_number":page_number,
+                #"page_number":page_number,
                 "buyer_qa":question_list
             }
+
 
             page_number = page_number + 1
             question_url = "https://question.jd.com/question/getQuestionAnswerList.action?page=%d&productId=%d" % (
@@ -67,15 +73,16 @@ class QuotesSpider(scrapy.Spider):
             page_number = page_number + 1
             question_url = "https://question.jd.com/question/getAnswerListById." \
                            "action?page=%d&questionId=%d" %(page_number,question_id)
-            yield scrapy.Request(question_url,callback=self.parse_buyer_makeup)
+            if(res["moreCount"]>1):
+                yield scrapy.Request(question_url,callback=self.parse_buyer_makeup)
             yield {
                 "item_id":item_id,
                 "question_id": question_id,
-                "page_number": page_number,
+                #"page_number": page_number,
                 "buyer_makeup": answer_list
             }
         else:
-            print("end of buyer_qa makeup parser.")
+            print("end of buyer_qa makeup parser:",question_id)
             pass
 
     def parse_seller(self,response):
@@ -102,7 +109,7 @@ class QuotesSpider(scrapy.Spider):
         if question_list:
             yield {
                 "item_id": item_id,
-                "page_number": page_number,
+                #"page_number": page_number,
                 "seller_qa": question_list
             }
             page_number = page_number + 1

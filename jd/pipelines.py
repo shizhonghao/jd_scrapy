@@ -15,22 +15,27 @@ class JdPipeline(object):
         # should be updating a document
         if "buyer_qa" in item:
             collection = self.db["buyer_qa"]
-            collection.insert_one(item)
-            """
-            print("buyer_qa pipe here")
-            f_name = "./data/buyer_qa/" + str(item["item_id"]) + "-" + str(item["page_number"]) + " buyer_qa.json"
-            qa_res = str(json.dumps(item,indent=4,ensure_ascii=False))
-            with open(f_name,"a",encoding="utf-8") as fp:
-                fp.write(qa_res)
-            """
+            for question in item["buyer_qa"]:
+                collection.update({"item_id":item["item_id"]},
+                                  {"$set": {"buyer_qa."+str(question["question_id"]):question}},
+                                  upsert=True)
 
         elif "buyer_makeup" in item:
-            pass
-
+            collection = self.db["buyer_qa"]
+            collection.update({"item_id": item["item_id"]},
+                              {"$addToSet": {"buyer_qa."+str(item["question_id"])+".answer": {"$each":item["buyer_makeup"] }}},
+                              upsert=True)
+            """
+            collection.update({"item_id": item["item_id"]},
+                              {"$inc": {"buyer_qa."+str(item["question_id"])+".cnt":1}},
+                              upsert=True)
+            """
+            
         elif "seller_qa" in item:
             collection = self.db["seller_qa"]
-            collection.insert_one(item)
-            pass
+            collection.update({"item_id": item["item_id"]},
+                              {"$addToSet": {"seller_qa": {"$each": item["seller_qa"]}}},
+                              upsert=True)
 
         elif "item_info" in item:
             collection = self.db["item_info"]
