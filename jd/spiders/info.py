@@ -30,6 +30,6 @@ def parse_info(response):
                 #print(string)
         #print(aDict)
         reDict[secInfo] = aDict
-    print(json.dumps(reDict,indent=4,ensure_ascii=False))
+    # print(json.dumps(reDict,indent=4,ensure_ascii=False))
     return reDict
     
