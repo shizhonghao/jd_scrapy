@@ -36,6 +36,8 @@
 
 * Using mongo plugin in pycharm to visualize database is recommeded
 
+* Run this command to start mongodb server with data on a certain path `"C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe" --dbpath d:\test\mongodb\data`
+
 ## Run scraper
 
 * First cd to your working directory
