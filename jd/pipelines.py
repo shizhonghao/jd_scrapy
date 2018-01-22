@@ -38,10 +38,12 @@ class JdPipeline(object):
             """
 
         elif "seller_qa" in item:
-            with open("sentence.txt",'a') as f:
-                for question in item["seller_qa"]:
-                    f.write(question["question"]+'\n')
-                    #f.write(question["answer"]+'\n')
+            with open("sentence.txt",'a') as f_q:
+                with open("answer.txt",'a') as f_a:
+                    for question in item["seller_qa"]:
+                        f_q.write(question["question"]+'\n')
+                        question["answer"] = question["answer"].replace('\n','')
+                        f_a.write(question["answer"]+'\n')
 
             collection = self.db["seller_qa"]
             collection.update({"item_id": item["item_id"]},
