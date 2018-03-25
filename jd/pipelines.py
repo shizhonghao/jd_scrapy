@@ -14,28 +14,14 @@ class JdPipeline(object):
 
         # should be updating a document
         if "buyer_qa" in item:
-            with open("sentence.txt",'a') as f:
+            with open("buyerQ.txt",'a') as f:
                 for question in item["buyer_qa"]:
-                    #f.write(question["question"]+'\n')
+                    f.write(question["question"]+'\n')
                     pass
 
-
             collection = self.db["buyer_qa"]
-            for question in item["buyer_qa"]:
-                collection.update({"item_id":item["item_id"]},
-                                  {"$set": {"buyer_qa."+str(question["question_id"]):question}},
-                                  upsert=True)
-
-        elif "buyer_makeup" in item:
-            collection = self.db["buyer_qa"]
-            collection.update({"item_id": item["item_id"]},
-                              {"$addToSet": {"buyer_qa."+str(item["question_id"])+".answer": {"$each":item["buyer_makeup"] }}},
-                              upsert=True)
-            """
-            collection.update({"item_id": item["item_id"]},
-                              {"$inc": {"buyer_qa."+str(item["question_id"])+".cnt":1}},
-                              upsert=True)
-            """
+            #for question in item["buyer_qa"]:
+            collection.update({"item_id":item["item_id"]},{"$addToSet": {"buyer_qa":{"$each":item["buyer_qa"]}}},upsert=True)
 
         elif "seller_qa" in item:
             with open("sentence.txt",'a') as f_q:
@@ -44,7 +30,6 @@ class JdPipeline(object):
                         f_q.write(question["question"]+'\n')
                         question["answer"] = question["answer"].replace('\n','')
                         f_a.write(question["answer"]+'\n')
-
             collection = self.db["seller_qa"]
             collection.update({"item_id": item["item_id"]},
                               {"$addToSet": {"seller_qa": {"$each": item["seller_qa"]}}},
@@ -62,3 +47,14 @@ class JdPipeline(object):
 
     def close_spider(self, spider):
         self.client.close()
+'''
+        elif "buyer_makeup" in item:
+            collection = self.db["buyer_qa"]
+            collection.update({"item_id": item["item_id"]},
+                              {"$addToSet": {"buyer_qa."+str(item["question_id"])+".answer": {"$each":item["buyer_makeup"] }}},
+                              upsert=True)
+
+            collection.update({"item_id": item["item_id"]},
+                              {"$inc": {"buyer_qa."+str(item["question_id"])+".cnt":1}},
+                              upsert=True)
+'''
