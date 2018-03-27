@@ -2,13 +2,25 @@ import scrapy
 import re
 import json
 from .info import parse_info
+import win_unicode_console
+win_unicode_console.enable()
+
+#response.xpath('body/div[@id="J_searchWrap"]/div[@id="J_container"]/div[@id="J_main"]/div[@class="m-list"]/div[@class="ml-wrap"]/div[@id="J_goodsList"]/ul/li/@data-sku').extract()
 
 class QuotesSpider(scrapy.Spider):
     name = "jd_qa"
-    start_urls = [
-        #'https://item.jd.com/2967929.html',
-        'https://item.jd.com/4835534.html'
+    id_list = [
+        '5706771','6629390','6737464','6023686','6627494','5663902','6008133','5853593',
+        '3234250','3888216','4914531','3355143','5544038','6001239','5181380','4483094',
+        '4207732','5005731','5963064','3893501','6558982','5148371','4154589','4483072',
+        '2600242', '5007536', '5105028', '4483108', '4193810', '3604173'
     ]
+    start_urls = []
+    for id in id_list:
+        newUrl = 'https://item.jd.com/'+id+'.html'
+        start_urls.append(newUrl)
+        #'https://item.jd.com/2967929.html',
+        #'https://item.jd.com/4835534.html'
 
     # however this function can only get the front two answers in answerlist
     # because the rest is not included in the returning json
@@ -64,7 +76,7 @@ class QuotesSpider(scrapy.Spider):
         page_number = int(re.findall('\d+', response.url)[0])
         question_id = int(re.findall('\d+', response.url)[1])
         answer_list = []
-        res = json.loads(response.body)
+        res = json.loads(response.body_as_unicode())
 
         if res["answers"]:
             item_id = res["answers"][0]["productId"]

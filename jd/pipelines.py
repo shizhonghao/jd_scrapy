@@ -14,7 +14,7 @@ class JdPipeline(object):
 
         # should be updating a document
         if "buyer_qa" in item:
-            with open("buyerQ.txt",'a') as f:
+            with open("buyerQ.txt",'a',encoding="utf-8") as f:
                 for question in item["buyer_qa"]:
                     f.write(question["question"]+'\n')
                     pass
@@ -24,11 +24,12 @@ class JdPipeline(object):
             collection.update({"item_id":item["item_id"]},{"$addToSet": {"buyer_qa":{"$each":item["buyer_qa"]}}},upsert=True)
 
         elif "seller_qa" in item:
-            with open("sentence.txt",'a') as f_q:
-                with open("answer.txt",'a') as f_a:
+            with open("sentence.txt",'a',encoding="utf-8") as f_q:
+                with open("answer.txt",'a',encoding="utf-8") as f_a:
                     for question in item["seller_qa"]:
                         f_q.write(question["question"]+'\n')
                         question["answer"] = question["answer"].replace('\n','')
+                        question["answer"] = question["answer"][3:-17]
                         f_a.write(question["answer"]+'\n')
             collection = self.db["seller_qa"]
             collection.update({"item_id": item["item_id"]},
