@@ -56,4 +56,10 @@
 
 * Database access is defined in `pipelines.py`
 
+## Dealing with warnings resulting from Windows update
+* It seems that the recent Windows update will cause a strange error in unicode.
+  The associate errors have share a similar appearence like "OSError: raw write() returned invalid length 2n (should have been between 0 and n)"
+* Solving this problem we first make sure that we have already installed win_unicode_console, which can be done by running "pip install win_unicode_console". And we add the following lines into the files that throw the particular errors.
+  import win_unicode_console
+  win_unicode_console.enable()
 
