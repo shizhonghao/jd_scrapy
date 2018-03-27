@@ -27,6 +27,7 @@ class JdPipeline(object):
             with open("sentence.txt",'a',encoding="utf-8") as f_q:
                 with open("answer.txt",'a',encoding="utf-8") as f_a:
                     for question in item["seller_qa"]:
+                        question["question"] = question["question"].replace('\n','')
                         f_q.write(question["question"]+'\n')
                         question["answer"] = question["answer"].replace('\n','')
                         question["answer"] = question["answer"][3:-17]
