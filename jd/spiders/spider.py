@@ -13,8 +13,21 @@ class QuotesSpider(scrapy.Spider):
         '5706771','6629390','6737464','6023686','6627494','5663902','6008133','5853593',
         '3234250','3888216','4914531','3355143','5544038','6001239','5181380','4483094',
         '4207732','5005731','5963064','3893501','6558982','5148371','4154589','4483072',
-        '2600242', '5007536', '5105028', '4483108', '4193810', '3604173'
+        '2600242','5007536','5105028','4483108','4193810','3604173','5001175','5001209',
+        '5089275','4230919','5089253','5663902','6019534','5924252','5089225','5826214',
+        '5835263','5618804','4554941','5544038','5544036','5912043','6008133','4120319',
+        '4586850','5425721','5181380','1861102','4914531','3234250','3888216','6558984',
+        '5005733','3355143','5159262','5842519','4207732','6708229','6022664','4143422',
+        '4483094','4768465','5159242','5962246','5963064','4720749','3893501','4746262',
+        '4432052','5911960','6070852','4154589','3458059','3133827','3133857','5148371',
+        '4094680','4611415','2600242','6389385','4510588','5283387','5357340','4112338',
+        '4483072','6631219','3889169','5762407','5495676','6661976','5813073','4577217',
+        '4554969','5437633','5484048','6405876','6176077','5283377','5495676','4734101',
+        '1592994','4884236','1945514','4938584','5107323','5901119','5204046','6022742',
+        '5906527','5980401','6134977','3604173','4024777','3749095','4934609','6113024',
+        '4571451','4503858',''
     ]
+    #'https://item.jd.com/4586850.html'
     start_urls = []
     for id in id_list:
         newUrl = 'https://item.jd.com/'+id+'.html'
@@ -25,7 +38,7 @@ class QuotesSpider(scrapy.Spider):
     # however this function can only get the front two answers in answerlist
     # because the rest is not included in the returning json
     def parse_buyer(self,response):
-        print("buyer:",response)
+        #print("buyer:",response)
         # question list of buyer-answers
         res = json.loads(response.body_as_unicode())
         question_list = []
@@ -98,7 +111,7 @@ class QuotesSpider(scrapy.Spider):
             pass
 
     def parse_seller(self,response):
-        print("seller:",response)
+        #print("seller:",response)
         item_id = int(re.findall('\d+', response.url)[0])
         page_number = int(re.findall('\d+', response.url)[1])
         # process here
@@ -139,7 +152,7 @@ class QuotesSpider(scrapy.Spider):
     def parse(self, response):
         # get item id
         item_id = int(re.findall('\d+',response.url)[0])
-        print("item-id:",item_id,type(item_id))
+        #print("item-id:",item_id,type(item_id))
 
         # parse item info
         info = parse_info(response)
