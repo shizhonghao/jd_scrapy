@@ -16,6 +16,7 @@ class JdPipeline(object):
         if "buyer_qa" in item:
             with open("buyerQ.txt",'a',encoding="utf-8") as f:
                 for question in item["buyer_qa"]:
+                    question["question"] = question["question"].replace('\n', '')
                     f.write(question["question"]+'\n')
                     pass
 
@@ -39,7 +40,7 @@ class JdPipeline(object):
 
         elif "item_info" in item:
             collection = self.db["item_info"]
-            collection.insert_one(item)
+            collection.insert(item,check_keys=False)
             pass
         return item
 
